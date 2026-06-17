@@ -1,0 +1,9 @@
+{
+  "name": "migration-scripts",
+  "type": "module",
+  "dependencies": {
+    "adm-zip": "^0.5.12",
+    "@tmcw/togeojson": "^5.0.0",
+    "xmldom": "^0.6.0"
+  }
+}

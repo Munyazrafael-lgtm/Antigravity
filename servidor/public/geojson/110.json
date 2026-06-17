@@ -1,0 +1,59 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.665330146810323,
+              41.85752902794984,
+              0
+            ],
+            [
+              2.667558917187938,
+              41.85909237275039,
+              0
+            ],
+            [
+              2.665629191897336,
+              41.86022418936808,
+              0
+            ],
+            [
+              2.663170418082705,
+              41.85839031395762,
+              0
+            ],
+            [
+              2.665330146810323,
+              41.85752902794984,
+              0
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "110",
+        "visibility": false,
+        "styleUrl": "#m_ylw-pushpin000",
+        "fill-opacity": 0,
+        "stroke-opacity": 1,
+        "stroke": "#cc3300",
+        "stroke-width": 10,
+        "icon-scale": 1.1,
+        "icon-offset": [
+          20,
+          2
+        ],
+        "icon-offset-units": [
+          "pixels",
+          "pixels"
+        ],
+        "icon": "http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png"
+      }
+    }
+  ]
+}

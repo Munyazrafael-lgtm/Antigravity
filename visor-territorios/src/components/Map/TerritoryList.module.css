@@ -1,0 +1,68 @@
+/* TerritoryList.module.css */ 
+ .listContainer { 
+   background: var(--bg-secondary); 
+   backdrop-filter: blur(12px); 
+   -webkit-backdrop-filter: blur(12px); 
+   border: 1px solid var(--surface-border); 
+   border-radius: 24px; 
+   padding: 0; 
+   margin-bottom: 1rem; 
+   animation: fadeIn 0.4s ease-out both; 
+ } 
+ .title { 
+   font-family: 'Outfit', sans-serif; 
+   font-size: 1.4rem; 
+   font-weight: 600; 
+   color: var(--text-primary); 
+   margin-bottom: 0.75rem; 
+   text-align: center; 
+ } 
+ .list { 
+   list-style: none; 
+   padding: 0; 
+   margin: 0; 
+   display: flex; 
+   flex-direction: column; 
+   gap: 0.5rem; 
+ } 
+ .item { 
+   cursor: pointer; 
+   padding: 0.5rem 0.75rem; 
+   border-radius: 12px; 
+   color: var(--text-primary); 
+   background: rgba(255,255,255,0.2); 
+   transition: all 0.2s ease; 
+   font-family: 'Outfit', sans-serif; 
+   font-size: 1rem; 
+ } 
+ .item:hover { 
+   background: rgba(255,255,255,0.4); 
+   transform: translateX(4px); 
+ } 
+ .active { 
+   background: var(--accent-gradient); 
+   color: white; 
+   font-weight: 600; 
+ } 
+ .hiddenMobile { 
+   display: block; 
+ } 
+.action-button-square {
+  display: none;
+}
+.territory-list-item.active .action-button-square {
+  display: inline-block;
+}
+
+/* Hide edit button unless the row is selected */
+.edit-territory-button {
+  display: none;
+}
+.territory-list-item.active .edit-territory-button {
+  display: inline-block;
+}
+ @media (max-width: 950px) { 
+   .hiddenMobile { 
+     display: none; /* se oculta en móvil después de seleccionar */ 
+   } 
+ }

@@ -1,0 +1,40 @@
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: rgba(255, 255, 255, 0.75);
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --accent-blue: #2563eb;
+  --accent-purple: #7c3aed;
+  --accent-gradient: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  --surface-border: rgba(255, 255, 255, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  line-height: 1.5;
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(37, 99, 235, 0.08), transparent 30%),
+    radial-gradient(circle at 85% 30%, rgba(124, 58, 237, 0.08), transparent 30%);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+}
+
+button {
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
