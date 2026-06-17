@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", // versión de JavaScript que generará
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": ".",
+    "outDir": "dist",
+    "strict": true, // activa todas las comprobaciones estrictas
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "allowJs": false, // no compilar .js (los vamos a convertir)
+    "noEmitOnError": true
+  },
+  "include": [
+    "scripts/**/*.ts",
+    "servidor/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

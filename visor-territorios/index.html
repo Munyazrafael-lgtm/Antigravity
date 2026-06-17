@@ -17,6 +17,39 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Limpiar Service Workers antiguos y caches obsoletas que causan pantalla blanca
+      if ('serviceWorker' in navigator) {
+        // 1. Eliminar SWs con scope incorrecto (legacy /pwa/)
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          registrations.forEach(function(reg) {
+            if (reg.scope.includes('/pwa/') || reg.scope !== (location.origin + '/')) {
+              reg.unregister();
+            }
+          });
+        });
+
+        // 2. Detectar pantalla blanca: si después de 4s el #root sigue vacío,
+        //    limpiar todas las caches y recargar (solo 1 intento por sesión)
+        setTimeout(function() {
+          var root = document.getElementById('root');
+          if (root && root.children.length === 0 && !sessionStorage.getItem('cache_fix_attempted')) {
+            sessionStorage.setItem('cache_fix_attempted', '1');
+            console.warn('App no cargó correctamente — limpiando caches...');
+            // Desregistrar todos los SW y limpiar caches
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              return Promise.all(regs.map(function(r) { return r.unregister(); }));
+            }).then(function() {
+              return caches.keys();
+            }).then(function(names) {
+              return Promise.all(names.map(function(n) { return caches.delete(n); }));
+            }).then(function() {
+              location.reload();
+            });
+          }
+        }, 4000);
+      }
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

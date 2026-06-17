@@ -1,31 +1,34 @@
+/* ─── Design Tokens (fuente única de verdad) ─── */
 :root {
-  --bg-primary: #f8fafc;
-  --bg-secondary: rgba(255, 255, 255, 0.75);
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --accent-blue: #2563eb;
-  --accent-purple: #7c3aed;
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --accent-blue: #3b82f6;
+  --accent-purple: #6366f1;
   --accent-gradient: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-  --surface-border: rgba(255, 255, 255, 1);
+  --surface-border: #cccccc;
 }
 
+/* ─── Global Reset ─── */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--bg-primary);
+  background: var(--bg-primary);
   color: var(--text-primary);
-  min-height: 100vh;
-  margin: 0;
   overflow-x: hidden;
   line-height: 1.5;
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(37, 99, 235, 0.08), transparent 30%),
-    radial-gradient(circle at 85% 30%, rgba(124, 58, 237, 0.08), transparent 30%);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -38,3 +41,87 @@ button {
   border: none;
   outline: none;
 }
+
+/* ─── Premium Dialog / Modal styles ─── */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.dialog-box {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--surface-border);
+  animation: scaleUp 0.2s ease-out;
+}
+
+.dialog-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.dialog-message {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.45;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.dialog-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.dialog-btn-cancel {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--surface-border);
+}
+
+.dialog-btn-cancel:hover {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.dialog-btn-confirm {
+  background: var(--accent-gradient);
+  color: white;
+}
+
+.dialog-btn-confirm:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+

@@ -1,0 +1,28 @@
+{
+  "name": "Administración de Territorios",
+  "short_name": "Admin Territorios",
+  "description": "Panel de administración y gestión para el Visor de Territorios",
+  "theme_color": "#2563eb",
+  "background_color": "#f8fafc",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/dt.html",
+  "icons": [
+    {
+      "src": "pwa-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "pwa-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "pwa-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

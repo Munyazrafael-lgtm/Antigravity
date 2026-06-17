@@ -1,0 +1,8 @@
+{
+  "name": "antigravity",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "convert": "node ./dist/scripts/convert_kmz_to_geojson.js"
+  }
+}

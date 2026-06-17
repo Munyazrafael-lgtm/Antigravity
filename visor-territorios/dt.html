@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Visor Territorios</title>
+    <link rel="manifest" href="/manifest-admin.webmanifest">
+    <!-- Estilo Minimalista y Moderno -->
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border: #cbd5e1;
+            --danger: #dc2626;
+            --danger-hover: #b91c1c;
+            --success: #16a34a;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        h1, h2 {
+            margin: 0;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(15, 23, 42, 0.04);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .grid.con-formulario {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            box-sizing: border-box;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        tr:hover td {
+            background-color: rgba(15, 23, 42, 0.015);
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-container input {
+            flex: 1;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        /* --- NUEVAS CLASES PARA EL SCRIPT DE ADMINISTRACIÓN --- */
+        .tr-rojo td {
+            background-color: #fee2e2 !important;
+        }
+        .tr-verde td {
+            background-color: #dcfce7 !important;
+        }
+        .fecha-alerta {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 5px rgba(59, 130, 246, 0.2);
+        }
+        .oculto {
+            display: none !important;
+        }
+        td {
+            position: relative;
+        }
+        .btn-acciones {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            color: var(--text-primary);
+        }
+        .btn-acciones:hover {
+            background-color: rgba(15, 23, 42, 0.05);
+        }
+        .menu-acciones {
+            position: absolute;
+            right: 12px;
+            top: 40px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            padding: 6px;
+            min-width: 170px;
+        }
+        .menu-acciones button {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            text-align: left;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        .menu-acciones button:hover {
+            background-color: rgba(15, 23, 42, 0.04);
+        }
+        .menu-acciones .btn-borrar-datos {
+            color: var(--text-secondary);
+        }
+        .menu-acciones .btn-eliminar-fila {
+            color: var(--danger);
+        }
+        .menu-acciones .btn-eliminar-fila:hover {
+            background-color: #fee2e2;
+        }
+        .guardado {
+            border-color: var(--success) !important;
+            box-shadow: 0 0 5px rgba(22, 163, 74, 0.2);
+            transition: border-color 0.5s ease, box-shadow 0.5s ease;
+        }
+        .error {
+            border-color: var(--danger) !important;
+            box-shadow: 0 0 5px rgba(220, 38, 38, 0.2);
+            transition: border-color 0.5s ease, box-shadow 0.5s ease;
+        }
+        #tablaTerritorios input {
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            padding: 6px 8px;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            transition: border-color 0.2s, background-color 0.2s;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        #tablaTerritorios input:hover {
+            border-color: var(--border);
+            background-color: rgba(0, 0, 0, 0.015);
+        }
+        #tablaTerritorios input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background-color: var(--bg-secondary);
+        }
+        #tablaTerritorios input[readonly] {
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            border-color: transparent !important;
+            background-color: transparent !important;
+        }
+
+        /* Ajustes de ancho para las columnas */
+        #tablaTerritorios {
+            table-layout: fixed;
+            width: 100%;
+        }
+        #tablaTerritorios th:nth-child(1),
+        #tablaTerritorios td:nth-child(1) {
+            width: 70px;
+            text-align: center;
+        }
+        #tablaTerritorios td:nth-child(1) input {
+            text-align: center;
+        }
+        #tablaTerritorios th:nth-child(3),
+        #tablaTerritorios td:nth-child(3) {
+            width: 130px;
+        }
+        #tablaTerritorios th:nth-child(4),
+        #tablaTerritorios td:nth-child(4) {
+            width: 140px;
+        }
+        #tablaTerritorios th:nth-child(5),
+        #tablaTerritorios td:nth-child(5) {
+            width: 140px;
+        }
+        #tablaTerritorios th:nth-child(6),
+        #tablaTerritorios td:nth-child(6) {
+            width: 80px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div>
+                <h1>Administración de Territorios</h1>
+            </div>
+            <div>
+                <a href="/" class="btn btn-secondary">Ir al Visor</a>
+            </div>
+        </header>
+
+        <section class="grid" id="main-grid">
+            <!-- Formulario de Edición / Creación -->
+            <div class="card oculto" id="form-container">
+                <h2 style="margin-bottom: 20px;" id="form-title">Nuevo Territorio</h2>
+                <form id="territorioForm">
+                    <input type="hidden" id="territorioId">
+                    
+                    <div class="form-group">
+                        <label for="numero">Número de Territorio</label>
+                        <input type="text" id="numero" required placeholder="Ej. 1A, 25, etc.">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="poblacion">Población / Zona</label>
+                        <select id="poblacion" required></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="publicador">Asignado a</label>
+                        <input type="text" id="publicador" list="listaNombres" placeholder="Nombre del publicador...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaAsignacion">Fecha de Asignación</label>
+                        <input type="date" id="fechaAsignacion">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaDevolucion">Fecha de Devolución</label>
+                        <input type="date" id="fechaDevolucion">
+                    </div>
+
+                    <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 20px;">
+                        <input type="checkbox" id="tieneAviso" style="width: auto; margin: 0;">
+                        <label for="tieneAviso" style="margin: 0; cursor: pointer;">⚠️ Tiene aviso importante</label>
+                    </div>
+
+                    <div class="form-group" id="avisoGroup" style="display: none; margin-top: 15px;">
+                        <label for="aviso">Detalle del aviso</label>
+                        <textarea id="aviso" rows="3" placeholder="Escribe el aviso aquí..."></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 25px;">
+                        <button type="submit" class="btn" id="btnGuardar">Guardar</button>
+                        <button type="button" class="btn btn-secondary" id="btnCancelar">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Listado y Tabla -->
+            <div class="card">
+                <div class="search-container">
+                    <input type="text" id="buscarInput" placeholder="Buscar por número o publicador...">
+                    <select id="filtroPoblacion" style="max-width: 200px;">
+                        <option value="">Todas las poblaciones</option>
+                    </select>
+                    <button type="button" class="btn" id="btnNuevoTerritorio">Nuevo Territorio</button>
+                </div>
+
+                <table id="tablaTerritorios">
+                    <thead>
+                        <tr>
+                            <th>Nº</th>
+                            <th>Asignado a</th>
+                            <th>WhatsApp</th>
+                            <th>Entregado</th>
+                            <th>Devuelto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Las filas se cargan dinámicamente desde app.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Datalist para el autocompletado de nombres (se pobla en app.js) -->
+    <datalist id="listaNombres"></datalist>
+
+    <!-- Scripts de Datos (Asegúrate de que existan en esta misma carpeta) -->
+    <script src="/contactos.js"></script>
+    <script src="/datos.js"></script>
+
+    <!-- Configuración de Firebase (inyectada antes de app.js para evitar credenciales hardcodeadas en JS) -->
+    <script>
+      window.__FIREBASE_CONFIG__ = {
+        apiKey: "%VITE_FIREBASE_API_KEY%",
+        authDomain: "%VITE_FIREBASE_AUTH_DOMAIN%",
+        projectId: "%VITE_FIREBASE_PROJECT_ID%",
+        storageBucket: "%VITE_FIREBASE_STORAGE_BUCKET%",
+        messagingSenderId: "%VITE_FIREBASE_MESSAGING_SENDER_ID%",
+        appId: "%VITE_FIREBASE_APP_ID%"
+      };
+    </script>
+
+    <!-- Script Principal -->
+    <script type="module" src="./src/admin/app.js"></script>
+
+</body>
+</html>
