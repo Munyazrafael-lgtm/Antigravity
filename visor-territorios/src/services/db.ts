@@ -122,30 +122,32 @@ export const eliminarMapasDeTerritorio = async (numero: string | number): Promis
   try {
     const db = await getDB();
 
-    // Fase 1: Leer todas las keys que coincidan (transacción readonly)
-    const keys = await new Promise<IDBValidKey[]>((resolve, reject) => {
-      const tx = db.transaction(STORE_NAME, "readonly");
-      const index = tx.objectStore(STORE_NAME).index("numero");
-
-      // Buscamos tanto por String como por Number para evitar fallos de tipo en IndexedDB
-      const keysSet = new Set<IDBValidKey>();
-      const stringReq = index.getAllKeys(numero.toString());
-      const numberReq = index.getAllKeys(Number(numero));
-
-      stringReq.onsuccess = () => (stringReq.result || []).forEach(k => keysSet.add(k));
-      numberReq.onsuccess = () => (numberReq.result || []).forEach(k => keysSet.add(k));
-
-      tx.oncomplete = () => resolve(Array.from(keysSet));
-      tx.onerror = () => reject(tx.error);
-    });
-
-    if (keys.length === 0) return true;
-
-    // Fase 2: Eliminar las keys encontradas (transacción readwrite separada)
     return new Promise((resolve, reject) => {
       const tx = db.transaction(STORE_NAME, "readwrite");
       const store = tx.objectStore(STORE_NAME);
-      keys.forEach(key => store.delete(key));
+      const index = store.index("numero");
+
+      const numStr = numero.toString();
+      const numVal = Number(numero);
+
+      // Buscamos y borramos usando cursores bajo la misma transacción
+      const reqStr = index.openCursor(numStr);
+      reqStr.onsuccess = (e) => {
+        const cursor = (e.target as IDBRequest<IDBCursorWithValue | null>).result;
+        if (cursor) {
+          cursor.delete();
+          cursor.continue();
+        }
+      };
+
+      const reqNum = index.openCursor(numVal);
+      reqNum.onsuccess = (e) => {
+        const cursor = (e.target as IDBRequest<IDBCursorWithValue | null>).result;
+        if (cursor) {
+          cursor.delete();
+          cursor.continue();
+        }
+      };
 
       tx.oncomplete = () => resolve(true);
       tx.onerror = () => reject(tx.error);

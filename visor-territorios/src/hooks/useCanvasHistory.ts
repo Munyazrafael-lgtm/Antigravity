@@ -3,8 +3,8 @@ import { useRef, useState, useCallback, useEffect } from 'react';
 const MAX_HISTORY = 5;
 
 interface HistoryState {
-  undo: ImageData[];
-  redo: ImageData[];
+  undo: string[];
+  redo: string[];
 }
 
 export interface CanvasHistoryActions {
@@ -13,12 +13,12 @@ export interface CanvasHistoryActions {
   handleUndo: () => void;
   handleRedo: () => void;
   saveToHistory: () => void;
-  resetHistory: (initialState: ImageData) => void;
+  resetHistory: (initialState: string) => void;
 }
 
 /**
  * Hook para gestionar el historial de undo/redo del canvas.
- * Almacena snapshots de ImageData y expone acciones para navegar el historial.
+ * Almacena snapshots comprimidos como Data URLs y expone acciones para navegar el historial.
  * También registra atajos de teclado globales (Ctrl+Z / Ctrl+Y).
  */
 export default function useCanvasHistory(canvasRef: React.RefObject<HTMLCanvasElement | null>): CanvasHistoryActions {
@@ -29,11 +29,11 @@ export default function useCanvasHistory(canvasRef: React.RefObject<HTMLCanvasEl
   const saveToHistory = useCallback((): void => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    if (!ctx) return;
-    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    
+    // Guardamos como JPEG comprimido para ahorrar memoria (reducido de 16MB a ~300KB por snapshot)
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
 
-    historyRef.current.undo.push(imgData);
+    historyRef.current.undo.push(dataUrl);
     if (historyRef.current.undo.length > MAX_HISTORY) {
       historyRef.current.undo.shift();
     }
@@ -49,15 +49,21 @@ export default function useCanvasHistory(canvasRef: React.RefObject<HTMLCanvasEl
 
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
+    
     const currentState = historyRef.current.undo.pop()!;
-
     historyRef.current.redo.push(currentState);
     if (historyRef.current.redo.length > MAX_HISTORY) {
       historyRef.current.redo.shift();
     }
 
     const prevState = historyRef.current.undo[historyRef.current.undo.length - 1];
-    ctx.putImageData(prevState, 0, 0);
+    
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+    };
+    img.src = prevState;
 
     setCanUndo(historyRef.current.undo.length > 1);
     setCanRedo(true);
@@ -69,20 +75,25 @@ export default function useCanvasHistory(canvasRef: React.RefObject<HTMLCanvasEl
 
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
+    
     const nextState = historyRef.current.redo.pop()!;
-
     historyRef.current.undo.push(nextState);
     if (historyRef.current.undo.length > MAX_HISTORY) {
       historyRef.current.undo.shift();
     }
 
-    ctx.putImageData(nextState, 0, 0);
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+    };
+    img.src = nextState;
 
     setCanUndo(true);
     setCanRedo(historyRef.current.redo.length > 0);
   }, [canvasRef]);
 
-  const resetHistory = useCallback((initialState: ImageData): void => {
+  const resetHistory = useCallback((initialState: string): void => {
     historyRef.current.undo = [initialState];
     historyRef.current.redo = [];
     setCanUndo(false);

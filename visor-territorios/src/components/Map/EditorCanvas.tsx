@@ -169,9 +169,9 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ mapaBase, onClose })
       const pattern = ctx.createPattern(imgOri, 'no-repeat');
       setEraserPattern(pattern);
 
-      // Guardar estado inicial en el historial
-      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      history.resetHistory(imgData);
+      // Guardar estado inicial en el historial (comprimido)
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      history.resetHistory(dataUrl);
     };
 
     drawInitialImage();
