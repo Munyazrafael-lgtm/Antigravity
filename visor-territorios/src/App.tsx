@@ -101,12 +101,22 @@ function App() {
       </div>
       <div className="map-container">
         {userName && showMap ? (
-          <>
-            <button className="back-mobile-btn" onClick={() => setShowMap(false)}>
-              <span>⬅️</span> Volver a la lista
-            </button>
-            <TerritoryMap territoryNumber={territoryNumber!} onMapLoad={setMapInstance} userLocation={userLocation} geojsonData={geojsonData} />
-          </>
+          territoryNumber ? (
+            <>
+              <button className="back-mobile-btn" onClick={() => setShowMap(false)}>
+                <span>⬅️</span> Volver a la lista
+              </button>
+              <TerritoryMap territoryNumber={territoryNumber} onMapLoad={setMapInstance} userLocation={userLocation} geojsonData={geojsonData} />
+            </>
+          ) : (
+            <div className="no-territory-selected">
+              <div className="no-territory-card">
+                <span className="no-territory-icon">🗺️</span>
+                <h3>Ningún territorio seleccionado</h3>
+                <p>Por favor, selecciona un territorio de la lista de la izquierda para ver su mapa detallado y sus límites.</p>
+              </div>
+            </div>
+          )
         ) : null}
       </div>
       <Suspense fallback={<div className="map-loading">Cargando módulo...</div>}>
